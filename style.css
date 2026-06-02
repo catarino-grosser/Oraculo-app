@@ -1,0 +1,277 @@
+/* Configurações Gerais e Cores */
+:root {
+    --bg-primary: #0b0314;
+    --bg-secondary: #160a29;
+    --accent-gold: #ffd700;
+    --text-light: #f4effa;
+    --text-muted: #a393bf;
+    --card-front-bg: #fdfbf7;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-primary);
+    color: var(--text-light);
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* Fundo Espacial / Místico Estático */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 50% 50%, #220f40 0%, #0b0314 80%);
+    z-index: -1;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+header h1 {
+    font-family: 'Cinzel', serif;
+    font-size: 2.8rem;
+    color: var(--accent-gold);
+    margin-bottom: 10px;
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+}
+
+/* Área de Input */
+.input-section {
+    background-color: var(--bg-secondary);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    margin-bottom: 40px;
+}
+
+.input-section label {
+    display: block;
+    font-size: 1.1rem;
+    margin-bottom: 15px;
+    color: var(--text-light);
+}
+
+.input-section input {
+    width: 100%;
+    max-width: 600px;
+    padding: 14px 20px;
+    font-size: 1rem;
+    border: 2px solid rgba(163, 147, 191, 0.3);
+    border-radius: 8px;
+    background-color: rgba(11, 3, 20, 0.6);
+    color: #fff;
+    outline: none;
+    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.input-section input:focus {
+    border-color: var(--accent-gold);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.2);
+}
+
+button {
+    background: linear-gradient(135deg, #ffd700 0%, #b39200 100%);
+    color: #0b0314;
+    font-size: 1.1rem;
+    font-weight: 600;
+    padding: 14px 35px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+}
+
+button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.5);
+}
+
+button:active {
+    transform: translateY(1px);
+}
+
+.payment-notice {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-top: 12px;
+}
+
+/* Mesa do Tarot (Layout das Cartas) */
+.tarot-table {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin: 40px 0;
+    flex-wrap: wrap;
+}
+
+/* ESTRUTURA DA ANIMAÇÃO 3D */
+.card-container {
+    perspective: 1200px; /* Dá profundidade ao giro 3D */
+    width: 180px;
+    height: 300px;
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d; /* Garante que os elementos filhos fiquem no espaço 3D */
+    transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    cursor: pointer;
+}
+
+/* Classe injetada pelo Javascript para virar a carta */
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Esconde a face oposta durante o giro */
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+/* Verso da Carta (Costas) */
+.card-back {
+    background: linear-gradient(135deg, #1f0d3d 0%, #0a0214 100%);
+    border: 3px double var(--accent-gold);
+    color: var(--accent-gold);
+}
+
+.card-back-design {
+    font-size: 3rem;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(255, 215, 0, 0.05);
+    box-shadow: inset 0 0 15px rgba(255, 215, 0, 0.1);
+}
+
+/* Frente da Carta (Revelada) */
+.card-front {
+    background-color: var(--card-front-bg);
+    color: #1a0933;
+    transform: rotateY(180deg); /* Começa invertida para aparecer certo ao girar */
+    border: 4px solid #1a0933;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.card-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #1a0933;
+    padding-bottom: 5px;
+}
+
+.card-illustration {
+    font-size: 3.5rem;
+    margin: 20px 0;
+}
+
+.card-position-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #6a5294;
+    background-color: rgba(106, 82, 148, 0.1);
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+/* Seção de Resposta */
+.reading-result {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.15);
+    padding: 4px 30px 30px 30px;
+    margin-top: 40px;
+    text-align: left;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    animation: fadeIn 0.6s ease forwards;
+}
+
+.reading-result h2 {
+    font-family: 'Cinzel', serif;
+    color: var(--accent-gold);
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    padding-bottom: 10px;
+}
+
+.reading-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: #e2d9f3;
+    margin-bottom: 30px;
+}
+
+.reading-text p {
+    margin-bottom: 15px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+#btn-reset {
+    background: transparent;
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+    box-shadow: none;
+    display: block;
+    margin: 0 auto;
+}
+
+#btn-reset:hover {
+    background: rgba(255, 215, 0, 0.1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

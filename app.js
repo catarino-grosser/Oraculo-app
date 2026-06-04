@@ -23,14 +23,30 @@ const pixCopiaCola = document.getElementById('pix-copia-cola');
 const btnCopyPix = document.getElementById('btn-copy-pix');
 const btnCancel = document.getElementById('btn-cancel-payment');
 
-let paymentInterval; // Variável para controlar o temporizador de verificação
+let paymentInterval; 
 
 function getRandomCards(deck, num) {
     const shuffled = [...deck].sort(() => 0.5 - Math.random());
     return shuffled.slice(0, num);
 }
 
-// 1. O utilizador clica em jogar
+// === SISTEMA DE MEMÓRIA: Verifica se há um Pix pendente ao abrir a página ===
+document.addEventListener('DOMContentLoaded', () => {
+    const pagamentoPendente = localStorage.getItem('tarot_sessao_pix');
+    if (pagamentoPendente) {
+        const dados = JSON.parse(pagamentoPendente);
+        
+        // Restaura a tela do Pix
+        inputSection.classList.add('hidden');
+        paymentSection.classList.remove('hidden');
+        qrCodeImg.src = `data:image/png;base64,${dados.qr_code_base64}`;
+        pixCopiaCola.value = dados.qr_code;
+        
+        // Retoma a verificação do banco
+        paymentInterval = setInterval(() => checkPaymentStatus(dados.id, dados.question), 4000);
+    }
+});
+
 btnDraw.addEventListener('click', async () => {
     const question = inputQuestion.value.trim();
     if (question === "") {
@@ -42,21 +58,26 @@ btnDraw.addEventListener('click', async () => {
     btnDraw.innerText = "Gerando cobrança mística...";
 
     try {
-        // Pede o Pix ao Backend
         const resPix = await fetch('/.netlify/functions/gerar-pix', { method: 'POST' });
         const pixData = await resPix.json();
 
         if (!resPix.ok) throw new Error(pixData.erro);
 
-        // Preenche o visual do Pix
+        // SALVA NA MEMÓRIA ANTES DE MOSTRAR NA TELA
+        const sessao = {
+            id: pixData.id,
+            qr_code: pixData.qr_code,
+            qr_code_base64: pixData.qr_code_base64,
+            question: question
+        };
+        localStorage.setItem('tarot_sessao_pix', JSON.stringify(sessao));
+
         qrCodeImg.src = `data:image/png;base64,${pixData.qr_code_base64}`;
         pixCopiaCola.value = pixData.qr_code;
         
-        // Esconde a pergunta e mostra o Pix
         inputSection.classList.add('hidden');
         paymentSection.classList.remove('hidden');
 
-        // Começa a verificar se foi pago a cada 4 segundos
         paymentInterval = setInterval(() => checkPaymentStatus(pixData.id, question), 4000);
 
     } catch (erro) {
@@ -66,7 +87,6 @@ btnDraw.addEventListener('click', async () => {
     }
 });
 
-// 2. Lógica para verificar o pagamento
 async function checkPaymentStatus(paymentId, question) {
     try {
         const res = await fetch('/.netlify/functions/verificar-pix', {
@@ -77,21 +97,20 @@ async function checkPaymentStatus(paymentId, question) {
         const data = await res.json();
 
         if (data.status === 'approved') {
-            clearInterval(paymentInterval); // Pára de verificar
-            paymentSection.classList.add('hidden'); // Esconde o Pix
-            iniciarLeitura(question); // Começa a mágica!
+            clearInterval(paymentInterval);
+            localStorage.removeItem('tarot_sessao_pix'); // Limpa a memória pois já pagou!
+            paymentSection.classList.add('hidden'); 
+            iniciarLeitura(question); 
         }
     } catch (error) {
         console.error("A aguardar banco...");
     }
 }
 
-// 3. O Fluxo de leitura (A Mágica Original)
 async function iniciarLeitura(question) {
     const selectedCards = getRandomCards(mockCardsDeck, 3);
     const nomesDasCartas = `${selectedCards[0].name}, ${selectedCards[1].name} e ${selectedCards[2].name}`;
 
-    // Vira as cartas
     selectedCards.forEach((cardData, index) => {
         const cardElement = document.getElementById(`card-${index + 1}`);
         cardElement.querySelector('.card-title').innerText = cardData.name;
@@ -125,7 +144,6 @@ async function iniciarLeitura(question) {
     }
 }
 
-// Botões extra (Copiar e Cancelar)
 btnCopyPix.addEventListener('click', () => {
     pixCopiaCola.select();
     document.execCommand('copy');
@@ -135,6 +153,7 @@ btnCopyPix.addEventListener('click', () => {
 
 btnCancel.addEventListener('click', () => {
     clearInterval(paymentInterval);
+    localStorage.removeItem('tarot_sessao_pix'); // Limpa a memória ao cancelar
     paymentSection.classList.add('hidden');
     inputSection.classList.remove('hidden');
     btnDraw.disabled = false;

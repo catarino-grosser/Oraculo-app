@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tarot Místico - Oráculo Virtual</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Fonte opcional para um visual mais místico -->
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
     <div class="stars"></div>
     <div class="twinkling"></div>
 
@@ -19,77 +17,47 @@
             <p class="subtitle">Conecte-se com o subconsciente e encontre suas respostas</p>
         </header>
 
-        <!-- Seção do Formulário de Pergunta -->
         <main class="game-area">
-            <div class="input-section">
+            <!-- Formulário de Pergunta -->
+            <div class="input-section" id="input-section">
                 <label for="user-question">Qual é a sua dúvida ou intenção para o oráculo?</label>
                 <input type="text" id="user-question" placeholder="Ex: O que devo focar na minha carreira esta semana?" autocomplete="off">
                 <button id="btn-draw">Mentalizar e Jogar (R$ 1,00)</button>
-                <p class="payment-notice">* Na próxima etapa, este botão gerará o Pix de R$ 1,00 antes de revelar as cartas.</p>
+            </div>
+
+            <!-- Ecrã de Pagamento Pix (Escondido por padrão) -->
+            <div id="payment-section" class="payment-section hidden">
+                <h2>🔮 O Oráculo aguarda a sua oferenda</h2>
+                <p>Realize o pagamento de <strong>R$ 1,00</strong> para revelar o seu destino.</p>
+                
+                <div class="qr-container">
+                    <!-- A imagem do QR Code vai aparecer aqui -->
+                    <img id="qr-code-img" src="" alt="QR Code Pix">
+                </div>
+                
+                <p class="pix-instruction">Ou use o Pix Copia e Cola:</p>
+                <input type="text" id="pix-copia-cola" readonly>
+                <button id="btn-copy-pix">Copiar Código Pix</button>
+                
+                <p id="payment-status" class="payment-status">⏳ Aguardando a confirmação do banco...</p>
+                <button id="btn-cancel-payment" class="btn-cancel">Cancelar Consulta</button>
             </div>
 
             <!-- Tabuleiro das Cartas -->
             <div class="tarot-table">
-                <!-- Carta 1 -->
-                <div class="card-container">
-                    <div class="card" id="card-1">
-                        <div class="card-face card-back">
-                            <div class="card-back-design">🔮</div>
-                        </div>
-                        <div class="card-face card-front">
-                            <div class="card-content">
-                                <h3 class="card-title">Carta 1</h3>
-                                <div class="card-illustration">✨</div>
-                                <p class="card-position-label">Passado / A Situação</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Carta 2 -->
-                <div class="card-container">
-                    <div class="card" id="card-2">
-                        <div class="card-face card-back">
-                            <div class="card-back-design">🔮</div>
-                        </div>
-                        <div class="card-face card-front">
-                            <div class="card-content">
-                                <h3 class="card-title">Carta 2</h3>
-                                <div class="card-illustration">✨</div>
-                                <p class="card-position-label">Presente / O Desafio</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Carta 3 -->
-                <div class="card-container">
-                    <div class="card" id="card-3">
-                        <div class="card-face card-back">
-                            <div class="card-back-design">🔮</div>
-                        </div>
-                        <div class="card-face card-front">
-                            <div class="card-content">
-                                <h3 class="card-title">Carta 3</h3>
-                                <div class="card-illustration">✨</div>
-                                <p class="card-position-label">Futuro / O Caminho</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <div class="card-container"><div class="card" id="card-1"><div class="card-face card-back"><div class="card-back-design">🔮</div></div><div class="card-face card-front"><div class="card-content"><h3 class="card-title">Carta 1</h3><div class="card-illustration">✨</div><p class="card-position-label">Passado</p></div></div></div></div>
+                <div class="card-container"><div class="card" id="card-2"><div class="card-face card-back"><div class="card-back-design">🔮</div></div><div class="card-face card-front"><div class="card-content"><h3 class="card-title">Carta 2</h3><div class="card-illustration">✨</div><p class="card-position-label">Presente</p></div></div></div></div>
+                <div class="card-container"><div class="card" id="card-3"><div class="card-face card-back"><div class="card-back-design">🔮</div></div><div class="card-face card-front"><div class="card-content"><h3 class="card-title">Carta 3</h3><div class="card-illustration">✨</div><p class="card-position-label">Futuro</p></div></div></div></div>
             </div>
 
             <!-- Área do Resultado da Leitura -->
             <div id="reading-result" class="reading-result hidden">
                 <h2>A Interpretação do Oráculo</h2>
-                <div id="reading-text" class="reading-text">
-                    <!-- O texto da IA entrará aqui -->
-                </div>
+                <div id="reading-text" class="reading-text"></div>
                 <button id="btn-reset">Fazer Nova Consulta</button>
             </div>
         </main>
     </div>
-
     <script src="app.js"></script>
 </body>
 </html>

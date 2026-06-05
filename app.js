@@ -168,3 +168,25 @@ btnReset.addEventListener('click', () => {
     btnDraw.disabled = false;
     btnDraw.innerText = "Mentalizar e Jogar (R$ 1,00)";
 });
+// === LÓGICA DO MODAL "COMO FUNCIONA" ===
+const btnInfo = document.getElementById('btn-info');
+const infoModal = document.getElementById('info-modal');
+const closeModal = document.getElementById('close-modal');
+
+// Abre o Modal
+btnInfo.addEventListener('click', () => {
+    infoModal.classList.remove('hidden');
+});
+
+// Fecha o Modal clicando no X
+closeModal.addEventListener('click', () => {
+    infoModal.classList.add('hidden');
+});
+
+// Fecha o Modal clicando na parte escura fora da caixa
+window.addEventListener('click', (evento) => {
+    if (evento.target === infoModal) {
+        infoModal.classList.add('hidden');
+    }
+});
+// ========================================
